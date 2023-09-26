@@ -1,10 +1,5 @@
 package org.example;
 
-import lombok.Data;
-
-import javax.validation.constraints.Size;
-import java.sql.SQLOutput;
-
 public class Player extends Creature {
 
     private int healAmount;

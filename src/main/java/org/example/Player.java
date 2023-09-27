@@ -6,12 +6,11 @@ public class Player extends Creature {
     final static byte CURRENT_LIMIT = 4;
     private byte limit;
 
-    public Player(byte attack, byte defence, int maxHealth, int minDamage, int maxDamage) {
-        super(attack, defence, maxHealth, minDamage, maxDamage);
-        setName("player");
+    public Player(String name, byte attack, byte defence, int maxHealth, int minDamage, int maxDamage) {
+        super(name, attack, defence, maxHealth, minDamage, maxDamage);
         setLimit(CURRENT_LIMIT);
-        //Учитывая, что здоровье - только натуральные числа, если maximumHealth игрока - 1, хилиться он не сможет.
-        setHealAmount(Math.round((float) getMaxHealth() * 30 / 100));
+        // Учитывая, что здоровье - только натуральные числа, если maximumHealth игрока - 1, хилиться он не сможет.
+        setHealAmount(calculateHealAmount());
 
     }
 
@@ -46,22 +45,26 @@ public class Player extends Creature {
         System.out.println("FRIENDLY FIRE!!");
     }
 
+    int calculateHealAmount(){
+        return(Math.round((float) getMaxHealth() * 30 / 100));
+    }
+
     public void heal(){
         if(limit != 0) {
             if (this.getHealth() == getMaxHealth()) {
-                System.out.println("Player already at maximum HP.");
-            } else if (!this.isDead() && (getHealth() + healAmount) < healAmount) {
+                System.out.println("Player already at maximum HP.\n");
+            } else if (!this.isDead() && (getHealth() + healAmount) < this.getMaxHealth()) {
                 this.setHealth(this.getHealth() + healAmount);
-                System.out.println(healAmount + " HP healed. " + "Current HP -  " + getHealth() + " HP.");
+                System.out.println(healAmount + " HP healed. " + "Current HP -  " + getHealth() + " HP.\n");
                 limit--;
             } else {
                 setHealth(getMaxHealth());
-                System.out.println("Healed to maximum HP! Current HP - " + getHealth() + " HP.");
+                System.out.println("Healed to maximum HP! Current HP - " + getHealth() + " HP.\n");
                 limit--;
             }
 
         } else {
-            System.out.println(getName().toUpperCase() + " is out of heals!");
+            System.out.println(getName().toUpperCase() + " is out of heals!\n");
         }
     }
 }

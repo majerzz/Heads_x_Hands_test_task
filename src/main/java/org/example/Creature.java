@@ -5,17 +5,15 @@ public abstract class Creature {
 
     private String name;
 
+    // Целое число от 1 до 30
+    private byte attack;
     final static byte MIN_ATTACK = 1;
     final static byte MAX_ATTACK = 30;
 
     // Целое число от 1 до 30
-    private byte attack;
-
+    private byte defence;
     final static byte MIN_DEFENCE = 1;
     final static byte MAX_DEFENCE = 30;
-
-    // Целое число от 1 до 30
-    private byte defence;
 
     // Натуральное число от 0 до N.
     private int maxHealth;
@@ -30,7 +28,9 @@ public abstract class Creature {
 
     private byte attackModifier;
 
-    public Creature(byte attack, byte defence, int maxHealth, int minDamage, int maxDamage){
+    public Creature(String name, byte attack, byte defence, int maxHealth, int minDamage, int maxDamage){
+        setName(name);
+
         setAttack(attack);
         setDefence(defence);
 
@@ -41,6 +41,7 @@ public abstract class Creature {
         setMaxDamage(maxDamage);
 
         setAttackModifier(calculateAttackModifier(this.attack, this.defence));
+
 
     }
 
@@ -149,12 +150,12 @@ public abstract class Creature {
         }
     }
 
-    // Вынесем посдчет модификатора атаки в отдельную функцию для лучшей читаемости.
+    // Вынесем посдчет модификатора атаки в отдельную функцию.
     byte calculateAttackModifier(byte attack, byte defence){
         return (byte)(attack - defence + 1);
     }
 
-    //Механика подсчетов атаки у всех существ одинакова, поэтому подсчеты оставляем в родительском классе.
+    // Механика подсчетов атаки у всех существ одинакова, поэтому подсчеты оставляем в родительском классе.
     void attackCalculation(Creature target){
         // Рассчитываем модификатор атаки как разность атаки и защиты существа + 1
 
@@ -164,12 +165,13 @@ public abstract class Creature {
         //Бросаем N кубиков, где N = attackModifier, минимум 1 бросок
         do{
             System.out.println("Rolling dice...");
-            int min = 1;
-            int max = 6;
+            final byte min = 1;
+            final byte max = 6;
             int randNum = min + (int)(Math.random() * max);
-            System.out.println("Dice is " + randNum + "!");
+            System.out.println("Rolled " + randNum + "!");
             temp--;
             if(randNum == 5 || randNum == 6){
+                System.out.println("Success!");
                 // Наносим цели урон, если на кубике выпало 5 или 6 и прекращаем бросать кубики
                 int targetDamage = (int) (Math.random() * ((getMaxDamage() + 1) - getMinDamage()) + getMinDamage());
                 if(targetDamage >= target.getHealth()){
@@ -181,6 +183,8 @@ public abstract class Creature {
                 }
                 System.out.println(getName().toUpperCase() + " deals " + target.getName() + " " + targetDamage + " damage.");
                 break;
+            } else {
+                System.out.println("Fail.");
             }
         } while(temp != 0);
         System.out.println();
